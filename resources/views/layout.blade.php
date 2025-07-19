@@ -6,6 +6,41 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 </head>
 <body class="p-4">
+
+    {{-- 🧭 NAVBAR PRINCIPAL --}}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 rounded shadow-sm px-3">
+        <a class="navbar-brand" href="{{ route('dashboard') }}">NSSP</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('dashboard') }}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('files.index') }}">Files</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('clients.index') }}">Clientes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('vessels.index') }}">Buques</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('time-logs.index') }}">Time Logs</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                @auth
+                <li class="nav-item">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button class="btn btn-outline-danger btn-sm">Cerrar sesión</button>
+                    </form>
+                </li>
+                @endauth
+            </ul>
+        </div>
+    </nav>
+
     <div class="container">
         <h1 class="mb-4">@yield('title')</h1>
 
@@ -17,6 +52,8 @@
                 </a>
             </div>
         @endif
+
+        {{-- 🔍 Formulario de búsqueda de files --}}
         @auth
         <form action="{{ route('files.search') }}" method="GET" class="row g-2 mb-4">
             <div class="col-auto">
@@ -35,12 +72,15 @@
         </form>
         @endauth
 
-        {{-- Mensaje de éxito (opcional) --}}
+        {{-- Mensajes de éxito y error --}}
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
 
-        {{-- Aquí se cargan los contenidos específicos de cada vista --}}
+        {{-- Contenido específico de cada vista --}}
         @yield('content')
     </div>
 </body>

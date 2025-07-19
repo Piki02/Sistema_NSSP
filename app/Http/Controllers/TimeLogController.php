@@ -2,63 +2,81 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TimeLog;
+use App\Models\File;
 use Illuminate\Http\Request;
 
 class TimeLogController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra todos los registros de time logs.
      */
     public function index()
     {
-        //
+        $timeLogs = TimeLog::with('file')->orderBy('log_date', 'desc')->get();
+        return view('time-logs.index', compact('timeLogs'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Muestra el formulario para crear un nuevo time log.
      */
     public function create()
     {
-        //
+        $files = File::all(); // Para seleccionar el file al que pertenece
+        return view('time-logs.create', compact('files'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guarda un nuevo time log.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'file_id' => 'required|exists:files,id',
+            'log_date' => 'required|date',
+            'time' => 'required',
+            'activity' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        TimeLog::create($request->all());
+
+        return redirect()->route('time-logs.index')->with('success', 'Registro creado correctamente.');
     }
 
     /**
-     * Display the specified resource.
+     * Muestra el formulario para editar un time log.
      */
-    public function show(string $id)
+    public function edit(TimeLog $timeLog)
     {
-        //
+        $files = File::all();
+        return view('time-logs.edit', compact('timeLog', 'files'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Actualiza un time log existente.
      */
-    public function edit(string $id)
+    public function update(Request $request, TimeLog $timeLog)
     {
-        //
+        $request->validate([
+            'file_id' => 'required|exists:files,id',
+            'log_date' => 'required|date',
+            'time' => 'required',
+            'activity' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $timeLog->update($request->all());
+
+        return redirect()->route('time-logs.index')->with('success', 'Registro actualizado.');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Elimina un time log.
      */
-    public function update(Request $request, string $id)
+    public function destroy(TimeLog $timeLog)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $timeLog->delete();
+        return redirect()->route('time-logs.index')->with('success', 'Registro eliminado.');
     }
 }

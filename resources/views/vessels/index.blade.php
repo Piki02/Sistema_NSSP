@@ -26,7 +26,7 @@
         @foreach($vessels as $vessel)
         <tr>
             <td>{{ $vessel->name }}</td>
-            <td>{{ $vessel->previus_name }}</td>
+            <td>{{ $vessel->previous_name }}</td>
             <td>{{ $vessel->built_year }}</td>
             <td>{{ $vessel->built_by }}</td>
             <td>{{ $vessel->hydrostatic_by }}</td>

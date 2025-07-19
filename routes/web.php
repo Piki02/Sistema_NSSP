@@ -48,5 +48,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('stowage-plans', StowagePlanController::class);
     Route::resource('performance-data', PerformanceDataController::class);
     Route::get('/files/search', [FileController::class, 'search'])->name('files.search');
+    Route::resource('time-logs', TimeLogController::class);
 
 });

@@ -32,4 +32,9 @@ class File extends Model
     {
         return $this->belongsTo(Vessel::class);
     }
+    public function timeLogs()
+    {
+    return $this->hasMany(TimeLog::class);
+    }
+
 }
